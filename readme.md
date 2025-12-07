@@ -261,7 +261,7 @@ The system provides a centralized dashboard for aviation companies to monitor th
 ### Step 1: Clone the Repository
 ```bash
 git clone <repository-url>
-cd gravitypakka
+cd Predictive Plane Crash Risk Assessment
 ```
 
 ### Step 2: Create Virtual Environment
@@ -433,7 +433,7 @@ The application will be available at `http://localhost:5000`
 ## 📁 Project Structure
 
 ```
-gravitypakka/
+Predictive Plane Crash Risk Assessment/
 ├── app.py                      # Main Flask application
 ├── models.py                   # Database models
 ├── config.py                    # Configuration
