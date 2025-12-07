@@ -512,13 +512,12 @@ This is a project repository. Contributions are welcome! Please follow standard 
 3. Make your changes
 4. Submit a pull request
 
-## 📄 License
 
-[Specify your license here]
 
 ## 👥 Authors
-
-[Your name/team name]
+Ammithesh Christus A
+Aditya S M
+Hari Prasanth B
 
 ## 🙏 Acknowledgments
 
@@ -527,16 +526,9 @@ This is a project repository. Contributions are welcome! Please follow standard 
 - Flask development team
 - Open-Meteo for weather data API
 
----
-
-**Version**: 1.0.0  
-**Last Updated**: 2024  
-**Status**: Active Development
-```
 
 This README includes:
 - Project overview and features
-- System architecture diagram
 - Module descriptions
 - Models used (YOLO, Gradient Boosting, Autoencoder)
 - Installation steps
