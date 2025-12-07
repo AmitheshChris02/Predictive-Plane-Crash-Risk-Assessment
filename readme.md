@@ -1,6 +1,6 @@
 
 ```markdown
-# Aircraft Monitoring System (GravityPakka)
+# Aircraft Monitoring System
 
 A comprehensive web-based aircraft monitoring and safety assessment system that integrates computer vision, machine learning, and real-time data analysis to provide comprehensive aircraft safety monitoring solutions.
 
