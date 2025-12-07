@@ -515,8 +515,8 @@ This is a project repository. Contributions are welcome! Please follow standard 
 
 
 ## 👥 Authors
-Ammithesh Christus A
-Aditya S M
+Amithesh Christus A,
+Aditya S M,
 Hari Prasanth B
 
 ## 🙏 Acknowledgments
