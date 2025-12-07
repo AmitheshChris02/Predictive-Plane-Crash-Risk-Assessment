@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Runway Monitor - Aircraft Monitoring System{% endblock %}
+
+{% block head %}
+<style>
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .video-feed {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .detection-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+    .stat-card {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Runway Monitor</h1>
+        <p class="lead">Upload a runway video to detect birds and potholes</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Upload Video</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('module1.upload_video') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="video" class="form-label">Select Video File</label>
+                        <input type="file" class="form-control" id="video" name="video" accept="video/*" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Start Detection</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Detection Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="detection-stats">
+                    <div class="stat-card">
+                        <div class="stat-value text-success" id="bird-count">0</div>
+                        <div class="stat-label">Bird Detections</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value text-danger" id="pothole-count">0</div>
+                        <div class="stat-label">Pothole Detections</div>
+                    </div>
+                </div>
+                <div class="mt-3 text-center" id="processing-status">
+                    <span class="badge bg-secondary">No video loaded</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Video Feed</h5>
+            </div>
+            <div class="card-body">
+                <div class="video-container">
+                    <img id="video-feed" class="video-feed" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Video feed will appear here">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="{{ url_for('module1.runway_alerts') }}" class="btn btn-primary">View Runway Alerts</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Function to update detection statistics
+    function updateStats() {
+        fetch('/video_status')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('bird-count').textContent = data.bird_count;
+                document.getElementById('pothole-count').textContent = data.pothole_count;
+                
+                const statusElement = document.getElementById('processing-status');
+                if (data.video_loaded) {
+                    if (data.processing) {
+                        statusElement.innerHTML = '<span class="badge bg-warning">Processing...</span>';
+                    } else {
+                        statusElement.innerHTML = '<span class="badge bg-success">Processing Complete</span>';
+                    }
+                } else {
+                    statusElement.innerHTML = '<span class="badge bg-secondary">No video loaded</span>';
+                }
+            })
+            .catch(error => console.error('Error updating stats:', error));
+    }
+    
+    // Function to update video feed
+    function updateVideoFeed() {
+        const videoFeed = document.getElementById('video-feed');
+        if (videoFeed.src.includes('placeholder')) {
+            // Force refresh by adding timestamp
+            videoFeed.src = '/video_feed?' + new Date().getTime();
+        }
+    }
+    
+    // Update stats every 2 seconds
+    setInterval(function() {
+        updateStats();
+        updateVideoFeed();
+    }, 2000);
+    
+    // Initial update
+    updateStats();
+</script>
+{% endblock %}

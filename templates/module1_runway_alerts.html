@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Runway Alerts History - Aircraft Monitoring System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Runway Detection History</h1>
+        <p class="lead">View and download past runway monitoring results</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Runway Alerts</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if alerts %}
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Video</th>
+                                    <th>Bird Detected</th>
+                                    <th>Pothole Detected</th>
+                                    <th>Created At</th>
+                                    <th>Download</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alert in alerts %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ alert.video_filename }}</td>
+                                        <td>
+                                            {% if alert.bird_count >= 1 %}
+                                                <span class="badge bg-success">Yes</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">No</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if alert.pothole_count >= 1 %}
+                                                <span class="badge bg-danger">Yes</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">No</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ alert.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                        <td>
+                                            <a href="{{ url_for('module1.download_video', filename=alert.video_filename) }}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                Download
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="p-3 mb-0">No runway alerts found yet.</p>
+                {% endif %}
+            </div>
+            <div class="card-footer text-end">
+                <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

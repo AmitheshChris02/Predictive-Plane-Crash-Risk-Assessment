@@ -1,0 +1,714 @@
+/* ===================================================================
+   3D METALLIC COCKPIT DESIGN - AEROSPACE ENGINEERING AESTHETIC
+   Titanium, Brushed Steel, Carbon Fiber, Copper, Neon Accents
+   =================================================================== */
+
+/* ===== CSS VARIABLES - COCKPIT PALETTE ===== */
+:root {
+    /* Metals & Materials */
+    --titanium-white: #e0e5ec;
+    --brushed-steel: #b0b5be;
+    --aircraft-aluminum: #8a919c;
+    --graphite-dark: #2b2e33;
+    --carbon-fiber: #1a1c20;
+    --cockpit-black: #0f1114;
+
+    /* Accents & Indicators */
+    --copper-accent: #cd7f32;
+    --copper-glow: rgba(205, 127, 50, 0.6);
+    --alert-red: #ff3333;
+    --safe-green: #00ffaa;
+    --info-cyan: #00ccff;
+    --warning-amber: #ffaa00;
+
+    /* Technical Typography */
+    --font-primary: 'Oxanium', sans-serif;
+    --font-display: 'Orbitron', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* 3D Depths & Bevels */
+    --bevel-light: rgba(255, 255, 255, 0.7);
+    --bevel-shadow: rgba(0, 0, 0, 0.8);
+    --panel-border: 1px solid rgba(255, 255, 255, 0.15);
+
+    /* Shadows */
+    --shadow-panel:
+        6px 6px 12px rgba(0, 0, 0, 0.6),
+        -2px -2px 4px rgba(255, 255, 255, 0.05),
+        inset 2px 2px 4px rgba(0, 0, 0, 0.8),
+        inset -1px -1px 2px rgba(255, 255, 255, 0.1);
+
+    --shadow-button:
+        4px 4px 8px rgba(0, 0, 0, 0.5),
+        -1px -1px 2px rgba(255, 255, 255, 0.1);
+
+    --shadow-pressed:
+        inset 4px 4px 8px rgba(0, 0, 0, 0.6),
+        inset -1px -1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* ===== GLOBAL RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--titanium-white);
+    background-color: var(--cockpit-black);
+    /* Carbon Fiber Pattern */
+    background-image:
+        linear-gradient(45deg, #131518 25%, transparent 25%, transparent 75%, #131518 75%, #131518),
+        linear-gradient(45deg, #131518 25%, transparent 25%, transparent 75%, #131518 75%, #131518);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+/* Vignette Overlay */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===== COCKPIT NAVBAR ===== */
+.navbar {
+    height: 80px !important;
+    background: linear-gradient(180deg, #2c3036 0%, #1a1c20 100%) !important;
+    border-bottom: 2px solid #000;
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex !important;
+    align-items: center !important;
+    position: relative;
+    z-index: 1000;
+}
+
+/* Metallic Strip at bottom of navbar */
+.navbar::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: repeating-linear-gradient(45deg,
+            #333,
+            #333 10px,
+            #222 10px,
+            #222 20px);
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #555;
+}
+
+.navbar-brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--titanium-white) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    display: flex !important;
+    align-items: center !important;
+}
+
+.navbar-brand img {
+    width: 45px;
+    margin-right: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+.navbar-nav .nav-link {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--aircraft-aluminum) !important;
+    padding: 0 20px !important;
+    height: 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: all 0.2s ease;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--info-cyan) !important;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 10px rgba(0, 204, 255, 0.1);
+    text-shadow: 0 0 8px var(--info-cyan);
+}
+
+/* Active indicator light */
+.navbar-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height: 3px;
+    background-color: var(--info-cyan);
+    box-shadow: 0 0 10px var(--info-cyan);
+}
+
+/* ===== METALLIC PANELS (CARDS) ===== */
+.card {
+    background: linear-gradient(135deg, #2b2e33 0%, #1f2226 100%);
+    border: 1px solid #3a3f47;
+    border-radius: 4px;
+    /* Industrial corners */
+    box-shadow: var(--shadow-panel);
+    color: var(--titanium-white);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: visible;
+    /* Allow screws to protrude if needed */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Rivets in corners */
+.card::before,
+.card::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #888, #222);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    z-index: 2;
+}
+
+.card::before {
+    top: 10px;
+    left: 10px;
+}
+
+.card::after {
+    top: 10px;
+    right: 10px;
+}
+
+/* Bottom rivets */
+.card-body::before,
+.card-body::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #888, #222);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    z-index: 2;
+    bottom: 10px;
+}
+
+.card-body::before {
+    left: 10px;
+}
+
+.card-body::after {
+    right: 10px;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--copper-accent);
+}
+
+.card-header {
+    background: linear-gradient(90deg, #1a1c20, #25282d);
+    border-bottom: 2px solid #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1rem 1.5rem;
+    border-radius: 3px 3px 0 0 !important;
+    position: relative;
+}
+
+/* Caution stripes on header */
+.card-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 40px;
+    height: 4px;
+    background: repeating-linear-gradient(45deg,
+            var(--warning-amber),
+            var(--warning-amber) 5px,
+            #000 5px,
+            #000 10px);
+}
+
+.card-body {
+    padding: 1.5rem;
+    background:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 19px,
+            rgba(255, 255, 255, 0.02) 20px);
+    /* Subtle grid lines */
+}
+
+/* ===== MECHANICAL BUTTONS ===== */
+.btn {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    border: none;
+    padding: 12px 24px;
+    position: relative;
+    transition: all 0.1s ease;
+    overflow: visible;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, #2a6f8f 0%, #1a4f6f 100%);
+    color: #fff;
+    box-shadow:
+        0 4px 0 #0f3045,
+        /* 3D depth */
+        0 5px 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #3a8fbf;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(180deg, #3a8fbf 0%, #2a6f8f 100%);
+    transform: translateY(-1px);
+    box-shadow:
+        0 5px 0 #0f3045,
+        0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary:active {
+    transform: translateY(3px);
+    box-shadow:
+        0 1px 0 #0f3045,
+        inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.btn-warning {
+    background: linear-gradient(180deg, #d4af37 0%, #aa8820 100%);
+    color: #000;
+    box-shadow:
+        0 4px 0 #775510,
+        0 5px 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #ffd700;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(180deg, #ffd700 0%, #d4af37 100%);
+    transform: translateY(-1px);
+}
+
+.btn-warning:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #775510;
+}
+
+.btn-success {
+    background: linear-gradient(180deg, #2d8659 0%, #1f5b3d 100%);
+    color: #fff;
+    box-shadow:
+        0 4px 0 #0f3b25,
+        0 5px 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid #3da372;
+}
+
+.btn-success:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #0f3b25;
+}
+
+.btn-outline-light {
+    background: transparent;
+    border: 2px solid var(--aircraft-aluminum);
+    color: var(--aircraft-aluminum);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* ===== COCKPIT INPUTS ===== */
+.form-control,
+.form-select {
+    background: #0a0a0a;
+    border: 1px solid #444;
+    border-radius: 2px;
+    color: var(--safe-green);
+    /* Terminal green text */
+    font-family: var(--font-mono);
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.8);
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: #0f0f0f;
+    border-color: var(--info-cyan);
+    box-shadow:
+        inset 2px 2px 5px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 204, 255, 0.2);
+    color: var(--info-cyan);
+}
+
+.form-label {
+    font-family: var(--font-primary);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--brushed-steel);
+    margin-bottom: 8px;
+}
+
+/* ===== DATA TABLES ===== */
+.table {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    color: var(--titanium-white);
+    font-family: var(--font-mono);
+}
+
+.table thead th {
+    background: #1a1c20;
+    border-bottom: 2px solid var(--copper-accent);
+    color: var(--copper-accent);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 15px;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #333;
+    transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+    background: rgba(0, 204, 255, 0.05);
+}
+
+.table td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+/* ===== TYPOGRAPHY & HEADINGS ===== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--titanium-white);
+}
+
+h1 {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.lead {
+    font-family: var(--font-primary);
+    color: var(--brushed-steel);
+}
+
+/* ===== ALERTS & STATUS ===== */
+.alert {
+    background: rgba(10, 10, 10, 0.8);
+    border-left: 4px solid;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.alert-success {
+    border-color: var(--safe-green);
+    color: var(--safe-green);
+}
+
+.alert-warning {
+    border-color: var(--warning-amber);
+    color: var(--warning-amber);
+}
+
+.alert-danger {
+    border-color: var(--alert-red);
+    color: var(--alert-red);
+}
+
+.alert-info {
+    border-color: var(--info-cyan);
+    color: var(--info-cyan);
+}
+
+main {
+    flex: 1 0 auto;
+    width: 100%;
+    margin-bottom: 10rem !important;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* ===== FOOTER ===== */
+footer.bg-dark {
+    flex-shrink: 0;
+    background: #0f1114 !important;
+    border-top: 4px solid #222;
+    margin-top: auto;
+    margin-bottom: 0 !important;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    position: relative;
+    width: 100%;
+}
+
+/* Caution stripes on footer top */
+footer.bg-dark::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: repeating-linear-gradient(90deg,
+            #222,
+            #222 20px,
+            #111 20px,
+            #111 40px);
+}
+
+footer h5 {
+    color: var(--copper-accent) !important;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes panelSlide {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.card,
+.hero-inner,
+.feature-card {
+    animation: panelSlide 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Staggered animation delays */
+.col-md-4:nth-child(1) .card {
+    animation-delay: 0.1s;
+}
+
+.col-md-4:nth-child(2) .card {
+    animation-delay: 0.2s;
+}
+
+.col-md-4:nth-child(3) .card {
+    animation-delay: 0.3s;
+}
+
+/* ===== UTILITIES ===== */
+.text-gold {
+    color: var(--copper-accent) !important;
+}
+
+.text-orange {
+    color: var(--warning-amber) !important;
+}
+
+.text-teal {
+    color: var(--info-cyan) !important;
+}
+
+.text-emerald {
+    color: var(--safe-green) !important;
+}
+
+/* Glow effects */
+.glow-gold {
+    text-shadow: 0 0 10px var(--copper-glow);
+}
+
+.glow-teal {
+    text-shadow: 0 0 10px rgba(0, 204, 255, 0.6);
+}
+
+/* ===== LAYOUT FIXES (Preserved from original) ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+[class*="col-"] {
+    padding: 0 15px;
+}
+
+/* Ensure full height cards */
+.card.h-100 {
+    height: calc(100% - 1.5rem);
+}
+
+/* Video Container - Cockpit Screen Style */
+.video-container {
+    border: 4px solid #333;
+    border-radius: 4px;
+    box-shadow:
+        0 0 0 2px #111,
+        0 0 20px rgba(0, 0, 0, 0.8);
+    position: relative;
+    background: #000;
+}
+
+/* Screen reflection */
+.video-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Stat Cards */
+.stat-card {
+    background: linear-gradient(180deg, #222 0%, #111 100%);
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.stat-value {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    color: var(--info-cyan);
+    text-shadow: 0 0 5px rgba(0, 204, 255, 0.5);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 1px;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    padding: 100px 0;
+    text-align: center;
+    background: radial-gradient(circle at center, #2b2e33 0%, #0f1114 100%);
+    border-bottom: 2px solid var(--copper-accent);
+}
+
+.hero-inner h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(180deg, #fff, #aaa);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ===== BOKEH PARTICLES (Fixed Position to prevent scroll overflow) ===== */
+#bokeh-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.bokeh-particle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+/* Ensure content is above background particles */
+main,
+footer,
+.navbar {
+    position: relative;
+    z-index: 2;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+    background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border: 2px solid #111;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--copper-accent);
+}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Alerts - Aircraft Monitoring System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Risk Alerts</h1>
+    <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Filter Alerts</h5>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link {% if filter_type == 'all' %}active{% endif %}" href="{{ url_for('module3.risk_alerts', filter='all') }}">All</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if filter_type == 'blackbox' %}active{% endif %}" href="{{ url_for('module3.risk_alerts', filter='blackbox') }}">Black Box</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if filter_type == 'takeoff' %}active{% endif %}" href="{{ url_for('module3.risk_alerts', filter='takeoff') }}">Takeoff Risk</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0">Risk Prediction History</h5>
+    </div>
+    <div class="card-body">
+        {% if alerts %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Module</th>
+                        <th>Prediction</th>
+                        <th>Key Parameters</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alert in alerts %}
+                    <tr>
+                        <td>{{ alert.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ alert.module_type }}</td>
+                        <td>{{ alert.prediction_label }}</td>
+                        <td>
+                            {% set features = alert.features | from_json %}
+                            {% if alert.module_type == 'BlackBox' %}
+                            Engine RPM: {{ features.engine_rpm }}, Oil Pressure: {{ features.oil_pressure }}
+                            {% else %}
+                            Wind Speed: {{ features.wind_speed_kts }}, Visibility: {{ features.visibility_km }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if alert.prediction_label in ['High', 'Engine_Failure_Risk', 'Hydraulic_Failure_Risk', 'Electrical_Anomaly'] %}
+                            <span class="badge bg-danger">High Risk</span>
+                            {% elif alert.prediction_label in ['Medium', 'Sensor_Malfunction'] %}
+                            <span class="badge bg-warning">Medium Risk</span>
+                            {% else %}
+                            <span class="badge bg-success">Low Risk</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">No risk alerts yet.</p>
+            <div class="d-flex justify-content-center gap-2">
+                <a href="{{ url_for('module2.blackbox') }}" class="btn btn-primary">Black Box Analysis</a>
+                <a href="{{ url_for('module3.takeoff_risk') }}" class="btn btn-primary">Takeoff Risk Assessment</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="{{ url_for('module1.runway_alerts') }}" class="btn btn-primary">View Runway Alerts</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add from_json filter for Jinja2
+    document.addEventListener('DOMContentLoaded', function() {
+        // This is just a placeholder for the from_json filter
+        // In a real Flask app, you would define this filter in the Jinja2 environment
+    });
+</script>
+{% endblock %}

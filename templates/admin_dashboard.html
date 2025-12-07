@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Aircraft Monitoring System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Admin Dashboard</h1>
+    <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">Logout</a>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title">Registered Companies</h5>
+                <p class="card-text display-4 text-primary">{{ companies|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Runway Alerts</h5>
+                <p class="card-text display-4 text-info">{{ total_runway_alerts }}</p>
+                <small class="text-muted">Total runway monitoring videos processed.</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Risk Alerts</h5>
+                <p class="card-text display-4 text-warning">{{ total_risk_alerts }}</p>
+                <small class="text-muted">Combined alerts from Black Box & Takeoff Risk modules.</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title">High Risk Alerts</h5>
+                <p class="card-text display-4 text-danger">
+                    {{ takeoff_counts.get('High', 0)
+                       + blackbox_counts.get('Engine_Failure_Risk', 0)
+                       + blackbox_counts.get('Hydraulic_Failure_Risk', 0)
+                       + blackbox_counts.get('Electrical_Anomaly', 0) }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Companies Table -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Registered Companies</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Company Name</th>
+                        <th>Email</th>
+                        <th>Registration Date</th>
+                        <th>Runway Alerts</th>
+                        <th>Risk Alerts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for company in companies %}
+                    <tr>
+                        <td>{{ company.id }}</td>
+                        <td>{{ company.company_name }}</td>
+                        <td>{{ company.email }}</td>
+                        <td>{{ company.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ company.runway_alerts|length }}</td>
+                        <td>{{ company.risk_alerts|length }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Alerts -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Recent Runway Alerts</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Video</th>
+                                <th>Bird</th>
+                                <th>Pothole</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alert, company_name in runway_alerts %}
+                            <tr>
+                                <td>{{ company_name }}</td>
+                                <td>{{ alert.video_filename }}</td>
+                                <td>
+                                    {% if alert.bird_count >= 1 %}
+                                        <span class="badge bg-success">Yes</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">No</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if alert.pothole_count >= 1 %}
+                                        <span class="badge bg-danger">Yes</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">No</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ alert.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Recent Risk Alerts</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Module</th>
+                                <th>Prediction</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alert, company_name in risk_alerts %}
+                            <tr>
+                                <td>{{ company_name }}</td>
+                                <td>{{ alert.module_type }}</td>
+                                <td>{{ alert.prediction_label }}</td>
+                                <td>{{ alert.created_at.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Risk Categories -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Black Box Risk Categories</h5>
+            </div>
+            <div class="card-body">
+                {% for category, count in blackbox_counts.items() %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{{ category }}</span>
+                    <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Takeoff Risk Categories</h5>
+            </div>
+            <div class="card-body">
+                {% for category, count in takeoff_counts.items() %}
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{{ category }}</span>
+                    <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

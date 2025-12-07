@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% set home_page = True %}
+{% block title %}Home - Aircraft Monitoring System{% endblock %}
+
+{% block head %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 150px 0;
+        margin-top: -56px; /* Offset for navbar */
+    }
+    .feature-card {
+        transition: transform 0.3s;
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+    }
+    /* Make hero title bigger */
+    .hero-inner h1 {
+        font-size: 4rem !important;      /* Bigger main title */
+        font-weight: 800 !important;
+    }
+
+    /* Make subtitle bigger */
+    .hero-inner p.lead {
+        font-size: 1.6rem !important;
+        font-weight: 500 !important;
+    }       
+
+/* Make all 3 buttons bigger */
+    .hero-inner .btn-lg {
+        font-size: 1.3rem !important;
+        padding: 14px 32px !important;
+        border-radius: 10px !important;
+    }
+
+</style>
+<style>
+.hero-inner h1 {
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 4rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    text-shadow: 0 8px 30px rgba(0,0,0,0.65);
+}
+
+.hero-inner p.lead {
+    font-size: 1.7rem !important;
+    font-weight: 400 !important;
+}
+
+.hero-inner {
+    margin-top: -70px !important;
+}
+</style>
+
+
+{% endblock %}
+
+{% block content %}
+
+{% set no_container = true %}    {# keep this at the very top of the file, directly under extends #}
+
+<!-- <section class="hero-section text-center full-bleed-hero"
+    style="
+        margin-top: 0%;
+        background-image:
+            linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+            url('{{ url_for('static', filename='images/bg.jpeg') }}');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        padding: 206px 0 150px 0;
+    ">
+    <div class="hero-inner container-fluid">
+        <h1 class="display-4 fw-bold mb-4 text-white">Aircraft Monitoring System</h1>
+        <p class="lead mb-5 text-white">Advanced monitoring solutions for aircraft safety and maintenance</p>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">Company Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg">Company Register</a>
+            <a href="{{ url_for('admin_login') }}" class="btn btn-outline-light btn-lg">Admin Login</a>
+        </div>
+    </div>
+</section>
+<style>
+ .full-bleed-hero {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  box-sizing: border-box;
+  z-index: 0;
+}
+
+.hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+@media (max-width: 576px) {
+  .full-bleed-hero { padding: 90px 0; }
+}
+</style> -->
+<section class="hero-section text-center full-bleed-hero position-relative"
+    style="margin-top: -16px; height: 500px;">
+
+    <!-- Background Video -->
+    <video class="hero-video" autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='videos/plane.mp4') }}" type="video/mp4">
+    </video>
+
+    <!-- Dark Overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Hero Content -->
+    <div class="hero-inner container-fluid position-relative">
+        <h1 class="display-4 fw-bold mb-4 text-white">Aircraft Monitoring System</h1>
+        <p class="lead mb-5 text-white">Advanced Monitoring Solutions for Passenger,Aircraft Safety and Maintenance</p>
+
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">Company Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg">Company Register</a>
+            <a href="{{ url_for('admin_login') }}" class="btn btn-outline-light btn-lg">Admin Login</a>
+        </div>
+    </div>
+
+</section>
+
+<style>
+/* Full width breakout */
+.full-bleed-hero {
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* Video styling */
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Dark overlay */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+}
+
+/* Hero content stays above video */
+.hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    padding: 150px 20px;
+}
+
+@media (max-width: 576px) {
+  .hero-inner {
+    padding: 90px 20px;
+  }
+}
+/* FIX FULL HERO WIDTH + REMOVE SCROLLBAR */
+html, body {
+    overflow-x: hidden !important;
+}
+
+/* Correct full-bleed hero layout */
+.full-bleed-hero {
+    position: relative;
+    width: 100vw !important;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+    overflow: hidden !important;
+}
+
+/* Make sure hero video always covers entire width */
+.hero-video {
+    width: 100vw !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+</style>
+
+
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Modules</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 feature-card shadow">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center fs-2 mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-camera-video"></i>
+                        </div>
+                        <h3 class="card-title">Runway Monitor</h3>
+                        <p class="card-text">Detect birds and potholes on runways using advanced computer vision technology.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 feature-card shadow">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center fs-2 mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-cpu"></i>
+                        </div>
+                        <h3 class="card-title">Black Box Analysis</h3>
+                        <p class="card-text">Predict potential failures and anomalies from aircraft black box data.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 feature-card shadow">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-warning bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center fs-2 mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <h3 class="card-title">Takeoff Risk Assessment</h3>
+                        <p class="card-text">Evaluate takeoff risks based on weather conditions and aircraft parameters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-5 about-section">
+    <div class="container about-gradient-box">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">About Our System</h2>
+                <p class="lead">Our Aircraft Monitoring System provides comprehensive solutions for aviation safety through advanced machine learning technologies.</p>
+                <p>We offer three main modules designed to address critical aspects of aircraft safety:</p>
+                <ul>
+                    <li>Takeoff risk assessment for enhanced flight safety</li>
+                    <li>Runway monitoring to detect potential hazards</li>
+                    <li>Black box analysis for predictive maintenance</li>
+                    
+                </ul>
+                <p>Join us in our mission to make aviation safer and more reliable.</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Aircraft Monitoring System" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</section>
+<!-- FINAL HERO OVERRIDE - place this at the BOTTOM of index.html -->
+<style>
+/* restore full-bleed hero video to original full height look */
+.hero-section {
+  position: relative;
+  min-height: 100vh !important;    /* full viewport height */
+  height: auto !important;         /* don't lock to px */
+  overflow: hidden;
+  display: block;
+}
+
+/* ensure the video fully covers area */
+.hero-video {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: auto !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+}
+
+/* overlay sits above video */
+.hero-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+}
+
+/* hero-inner should layer above overlay and be centered */
+.hero-inner {
+  position: relative !important;
+  z-index: 2 !important;
+  max-width: 1200px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* slide the content up INSIDE the full-height video
+     - use translateY with percentage to be responsive */
+  transform: translateY(14%) !important; /* change -8% to -12% to move up more */
+  transition: transform 0.25s ease !important;
+  padding: 0 20px !important; /* remove big padding that pushed things down */
+}
+
+/* title/subtitle/button sizing remains as you want */
+.hero-inner h1 { /* keep your existing font tweaks */
+  /* leave existing rules or add overrides here */
+}
+
+/* responsive tweak: reduce upward translate on small screens */
+@media (max-width: 992px) {
+  .hero-inner { transform: translateY(-5%) !important; }
+  .hero-inner h1 { font-size: 3rem !important; }
+  .hero-inner p.lead { font-size: 1.1rem !important; }
+}
+@media (max-width: 576px) {
+  .hero-inner { transform: translateY(-3%) !important; }
+  .hero-inner h1 { font-size: 2.2rem !important; }
+  .hero-inner p.lead { font-size: 1rem !important; }
+}
+</style>
+
+<script>
+/* small fallback: re-apply transform after load to defeat stubborn CSS cascade/cache */
+document.addEventListener('DOMContentLoaded', function () {
+  var hi = document.querySelector('.hero-inner');
+  if (hi) {
+    hi.style.transform = 'translateY(-8%)';
+    // reflow to ensure browser respects this
+    hi.getBoundingClientRect();
+  }
+  // if hero-video didn't expand correctly, force repaint:
+  var v = document.querySelector('.hero-video');
+  if (v) {
+    v.style.visibility = 'visible';
+    v.getBoundingClientRect();
+  }
+});
+</script>
+
+{% endblock %}

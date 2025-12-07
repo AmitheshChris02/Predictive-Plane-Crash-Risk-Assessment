@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Takeoff Risk Assessment - Aircraft Monitoring System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Takeoff Risk Assessment</h1>
+        <p class="lead">Evaluate takeoff risks based on weather conditions and aircraft parameters</p>
+    </div>
+</div>
+
+{% if prediction %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow border-{{ color }}">
+            <div class="card-header bg-{{ color }} text-white">
+                <h5 class="mb-0">Risk Assessment Result</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 text-{{ color }}">{{ prediction }} Risk</h2>
+                <p class="lead">Based on the provided takeoff parameters</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Weather Conditions</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Wind Speed (kts)</td>
+                                    <td>{{ features.wind_speed_kts }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Visibility (km)</td>
+                                    <td>{{ features.visibility_km }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Temperature (°C)</td>
+                                    <td>{{ features.temp_c }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Precipitation</td>
+                                    <td>{{ features.precipitation }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Elevation (ft)</td>
+                                    <td>{{ features.elevation_ft }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Aircraft Parameters</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Runway Length (m)</td>
+                                    <td>{{ features.runway_length_m }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Runway Condition</td>
+                                    <td>{{ features.runway_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Aircraft Age (years)</td>
+                                    <td>{{ features.aircraft_age_yrs }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Days Since Last Service</td>
+                                    <td>{{ features.last_service_days }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Load Factor (%)</td>
+                                    <td>{{ features.load_factor_pct }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Crosswind Component</td>
+                                    <td>{{ features.crosswind_comp }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Takeoff Parameters</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('module3.predict_takeoff') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="wind_speed_kts" class="form-label">Wind Speed (kts)</label>
+                            <input type="number" step="any" class="form-control" id="wind_speed_kts" name="wind_speed_kts" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="visibility_km" class="form-label">Visibility (km)</label>
+                            <input type="number" step="any" class="form-control" id="visibility_km" name="visibility_km" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="runway_length_m" class="form-label">Runway Length (m)</label>
+                            <input type="number" step="any" class="form-control" id="runway_length_m" name="runway_length_m" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="temp_c" class="form-label">Temperature (°C)</label>
+                            <input type="number" step="any" class="form-control" id="temp_c" name="temp_c" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="aircraft_age_yrs" class="form-label">Aircraft Age (years)</label>
+                            <input type="number" step="any" class="form-control" id="aircraft_age_yrs" name="aircraft_age_yrs" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_service_days" class="form-label">Days Since Last Service</label>
+                            <input type="number" step="any" class="form-control" id="last_service_days" name="last_service_days" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="load_factor_pct" class="form-label">Load Factor (%)</label>
+                            <input type="number" step="any" class="form-control" id="load_factor_pct" name="load_factor_pct" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="elevation_ft" class="form-label">Elevation (ft)</label>
+                            <input type="number" step="any" class="form-control" id="elevation_ft" name="elevation_ft" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="crosswind_comp" class="form-label">Crosswind Component</label>
+                            <input type="number" step="any" class="form-control" id="crosswind_comp" name="crosswind_comp" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="precipitation" class="form-label">Precipitation</label>
+                            <select class="form-select" id="precipitation" name="precipitation" required>
+                                <option value="None">None</option>
+                                <option value="Light Rain">Light Rain</option>
+                                <option value="Rain">Rain</option>
+                                <option value="Storm">Storm</option>
+                                <option value="Heavy Storm">Heavy Storm</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="runway_condition" class="form-label">Runway Condition</label>
+                            <select class="form-select" id="runway_condition" name="runway_condition" required>
+                                <option value="Dry">Dry</option>
+                                <option value="Damp">Damp</option>
+                                <option value="Wet">Wet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Assess Risk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="{{ url_for('module3.risk_alerts') }}" class="btn btn-primary">View Risk Alerts</a>
+        </div>
+    </div>
+</div>
+<!-- ⭐⭐⭐ NEW SIMULATION SECTION ADDED BELOW ⭐⭐⭐ -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card shadow-lg">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Real-Time Simulation with API</h4>
+            </div>
+            <div class="card-body" style="height: 900px;">
+                <iframe src="http://127.0.0.1:8502"
+                        style="width: 100%; height: 100%; border: none; border-radius: 10px;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

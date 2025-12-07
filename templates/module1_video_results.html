@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}Video Results - Aircraft Monitoring System{% endblock %}
+
+{% block head %}
+<style>
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .video-feed {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #000;
+    }
+    .detection-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+    .stat-card {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+    }
+    .stat-value {
+        font-size: 1.6rem;
+        font-weight: bold;
+    }
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Video Detection Results</h1>
+        <p class="lead">View the processed video with detection results</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Video Feed</h5>
+            </div>
+            <div class="card-body">
+                <div class="video-container">
+                    <img
+                        id="video-feed"
+                        class="video-feed"
+                        src="{{ url_for('static', filename='images/placeholder.png') }}"
+                        alt="Video feed will appear here"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Detection Statistics (0 = No, 1 = Yes)</h5>
+            </div>
+            <div class="card-body">
+                <div class="detection-stats">
+                    <div class="stat-card">
+                        <div class="stat-value text-success" id="bird-count">0</div>
+                        <div class="stat-label">Bird Detected</div>
+                        <div id="bird-status-badge" class="mt-2">
+                            <span class="badge bg-secondary">No</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value text-danger" id="pothole-count">0</div>
+                        <div class="stat-label">Pothole Detected</div>
+                        <div id="pothole-status-badge" class="mt-2">
+                            <span class="badge bg-secondary">No</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 text-center" id="processing-status">
+                    <span class="badge bg-secondary">No video loaded</span>
+                </div>
+                <div class="mt-3">
+                    <button id="stop-video" class="btn btn-danger w-100">Stop Video</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="{{ url_for('module1.runway_monitor') }}" class="btn btn-primary">Upload New Video</a>
+            <a href="{{ url_for('module1.runway_alerts') }}" class="btn btn-primary">View Runway Alerts</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let videoFeedInterval;
+
+    function updateBadges(birdCount, potholeCount) {
+        const birdBadge = document.getElementById('bird-status-badge');
+        const potholeBadge = document.getElementById('pothole-status-badge');
+
+        if (birdCount >= 1) {
+            birdBadge.innerHTML = '<span class="badge bg-success">Yes</span>';
+        } else {
+            birdBadge.innerHTML = '<span class="badge bg-secondary">No</span>';
+        }
+
+        if (potholeCount >= 1) {
+            potholeBadge.innerHTML = '<span class="badge bg-danger">Yes</span>';
+        } else {
+            potholeBadge.innerHTML = '<span class="badge bg-secondary">No</span>';
+        }
+    }
+
+    // Function to update detection statistics
+    function updateStats() {
+        fetch('{{ url_for("module1.video_status") }}')
+            .then(response => response.json())
+            .then(data => {
+                const birdCount = data.bird_count || 0;
+                const potholeCount = data.pothole_count || 0;
+
+                document.getElementById('bird-count').textContent = birdCount;
+                document.getElementById('pothole-count').textContent = potholeCount;
+
+                updateBadges(birdCount, potholeCount);
+
+                const statusElement = document.getElementById('processing-status');
+                const videoFeed = document.getElementById('video-feed');
+
+                if (data.video_loaded) {
+                    if (data.processing) {
+                        statusElement.innerHTML = '<span class="badge bg-warning">Processing...</span>';
+                    } else {
+                        statusElement.innerHTML = '<span class="badge bg-success">Processing Complete</span>';
+                    }
+
+                    // Ensure video feed is showing live stream (from /module1/video_feed)
+                    if (!videoFeed.src.includes('module1/video_feed')) {
+                        videoFeed.src = '{{ url_for("module1.video_feed") }}?t=' + new Date().getTime();
+                    }
+                } else {
+                    statusElement.innerHTML = '<span class="badge bg-secondary">No video loaded</span>';
+                    // Reset video feed to placeholder
+                    if (!videoFeed.src.includes('placeholder')) {
+                        videoFeed.src = '{{ url_for("static", filename="images/placeholder.png") }}';
+                    }
+                }
+            })
+            .catch(error => console.error('Error updating stats:', error));
+    }
+
+    // Function to stop video
+    function stopVideo() {
+        fetch('{{ url_for("module1.stop_video") }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const videoFeed = document.getElementById('video-feed');
+                    videoFeed.src = '{{ url_for("static", filename="images/placeholder.png") }}';
+
+                    document.getElementById('processing-status').innerHTML =
+                        '<span class="badge bg-secondary">Video Stopped</span>';
+
+                    if (videoFeedInterval) {
+                        clearInterval(videoFeedInterval);
+                    }
+                }
+            })
+            .catch(error => console.error('Error stopping video:', error));
+    }
+
+    // Update stats every 2 seconds
+    function startUpdatingStats() {
+        updateStats();
+        videoFeedInterval = setInterval(updateStats, 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('stop-video').addEventListener('click', stopVideo);
+        startUpdatingStats();
+    });
+
+    window.addEventListener('beforeunload', function() {
+        if (videoFeedInterval) {
+            clearInterval(videoFeedInterval);
+        }
+    });
+</script>
+{% endblock %}

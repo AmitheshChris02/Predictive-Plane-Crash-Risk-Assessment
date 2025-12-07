@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Black Box Analysis - Aircraft Monitoring System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Black Box Analysis</h1>
+        <p class="lead">Analyze black box data to predict potential failures and anomalies</p>
+    </div>
+</div>
+
+{% if prediction %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow border-{{ color }}">
+            <div class="card-header bg-{{ color }} text-white">
+                <h5 class="mb-0">Prediction Result</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="display-4 text-{{ color }}">{{ prediction }}</h2>
+                <p class="lead">Based on the provided black box data</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Input Parameters</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr><td>Cycle</td><td>{{ features.cycle }}</td></tr>
+                                <tr><td>Altitude (ft)</td><td>{{ features.altitude_ft }}</td></tr>
+                                <tr><td>Airspeed (kts)</td><td>{{ features.airspeed_kts }}</td></tr>
+                                <tr><td>Engine RPM</td><td>{{ features.engine_rpm }}</td></tr>
+                                <tr><td>EGT Temperature</td><td>{{ features.egt_temp }}</td></tr>
+                                <tr><td>Oil Pressure</td><td>{{ features.oil_pressure }}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>&nbsp;</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr><td>Hydraulic Pressure</td><td>{{ features.hydraulic_pressure }}</td></tr>
+                                <tr><td>Vibration Level</td><td>{{ features.vibration_level }}</td></tr>
+                                <tr><td>Fuel Flow</td><td>{{ features.fuel_flow }}</td></tr>
+                                <tr><td>Generator Voltage</td><td>{{ features.generator_voltage }}</td></tr>
+                                <tr><td>Sensor Health</td><td>{{ features.sensor_health }}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ORIGINAL BLACKBOX FORM (unchanged) -->
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Black Box Parameters</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('module2.predict_blackbox') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cycle" class="form-label">Cycle</label>
+                            <input type="number" step="any" class="form-control" id="cycle" name="cycle" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="altitude_ft" class="form-label">Altitude (ft)</label>
+                            <input type="number" step="any" class="form-control" id="altitude_ft" name="altitude_ft" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="airspeed_kts" class="form-label">Airspeed (kts)</label>
+                            <input type="number" step="any" class="form-control" id="airspeed_kts" name="airspeed_kts" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="engine_rpm" class="form-label">Engine RPM</label>
+                            <input type="number" step="any" class="form-control" id="engine_rpm" name="engine_rpm" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="egt_temp" class="form-label">EGT Temperature</label>
+                            <input type="number" step="any" class="form-control" id="egt_temp" name="egt_temp" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="oil_pressure" class="form-label">Oil Pressure</label>
+                            <input type="number" step="any" class="form-control" id="oil_pressure" name="oil_pressure" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="hydraulic_pressure" class="form-label">Hydraulic Pressure</label>
+                            <input type="number" step="any" class="form-control" id="hydraulic_pressure" name="hydraulic_pressure" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vibration_level" class="form-label">Vibration Level</label>
+                            <input type="number" step="any" class="form-control" id="vibration_level" name="vibration_level" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="fuel_flow" class="form-label">Fuel Flow</label>
+                            <input type="number" step="any" class="form-control" id="fuel_flow" name="fuel_flow" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="generator_voltage" class="form-label">Generator Voltage</label>
+                            <input type="number" step="any" class="form-control" id="generator_voltage" name="generator_voltage" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="sensor_health" class="form-label">Sensor Health</label>
+                            <input type="number" step="any" class="form-control" id="sensor_health" name="sensor_health" required>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Analyze Data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ⭐⭐⭐ NEW SIMULATION SECTION ADDED BELOW ⭐⭐⭐ -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card shadow-lg">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Real-Time Simulation</h4>
+            </div>
+            <div class="card-body" style="height: 900px;">
+                <iframe src="http://127.0.0.1:8501"
+                        style="width: 100%; height: 100%; border: none; border-radius: 10px;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
