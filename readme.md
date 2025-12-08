@@ -8,7 +8,6 @@ A comprehensive web-based aircraft monitoring and safety assessment system that 
 
 - [Overview](#overview)
 - [Features](#features)
-- [System Architecture](#system-architecture)
 - [Modules](#modules)
 - [Models Used](#models-used)
 - [Technology Stack](#technology-stack)
