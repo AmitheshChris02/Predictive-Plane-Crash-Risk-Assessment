@@ -90,20 +90,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card shadow">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0">Video Feed</h5>
-            </div>
-            <div class="card-body">
-                <div class="video-container">
-                    <img id="video-feed" class="video-feed" src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Video feed will appear here">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row mt-4">
     <div class="col-12">
@@ -139,19 +125,9 @@
             .catch(error => console.error('Error updating stats:', error));
     }
     
-    // Function to update video feed
-    function updateVideoFeed() {
-        const videoFeed = document.getElementById('video-feed');
-        if (videoFeed.src.includes('placeholder')) {
-            // Force refresh by adding timestamp
-            videoFeed.src = '/video_feed?' + new Date().getTime();
-        }
-    }
-    
     // Update stats every 2 seconds
     setInterval(function() {
         updateStats();
-        updateVideoFeed();
     }, 2000);
     
     // Initial update

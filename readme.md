@@ -305,7 +305,11 @@ source venv/bin/activate
 ```bash
 pip install flask flask-sqlalchemy werkzeug ultralytics opencv-python numpy pandas scikit-learn matplotlib shap
 ```
-
+py -3.11 -m venv plane_env
+plane_env\Scripts\activate
+streamlit run Sanomaly_app.py
+plane_env\Scripts\activate
+streamlit run SRisk.py
 **Note**: Create a `requirements.txt` with:
 ```
 Flask==2.3.0

@@ -1,0 +1,12 @@
+plane_env/
+venv/
+__pycache__/
+*.pyc
+.env
+.cache.sqlite
+instance/
+logs/
+models/
+uploads/
+*.pkl
+*.csv
