@@ -59,8 +59,8 @@
                     <img
                         id="video-feed"
                         class="video-feed"
-                        src="{{ url_for('static', filename='images/placeholder.png') }}"
-                        alt="Video feed will appear here"
+                        src="{{ url_for('module1.video_feed') }}"
+                        alt="Video stream will appear here"
                     >
                 </div>
             </div>
@@ -155,15 +155,17 @@
                     }
 
                     // Ensure video feed is showing live stream (from /module1/video_feed)
+                    videoFeed.style.display = 'block';
                     if (!videoFeed.src.includes('module1/video_feed')) {
                         videoFeed.src = '{{ url_for("module1.video_feed") }}?t=' + new Date().getTime();
                     }
                 } else {
                     statusElement.innerHTML = '<span class="badge bg-secondary">No video loaded</span>';
-                    // Reset video feed to placeholder
-                    if (!videoFeed.src.includes('placeholder')) {
-                        videoFeed.src = '{{ url_for("static", filename="images/placeholder.png") }}';
+                    // Clear the video feed
+                    if (videoFeed.src !== '') {
+                        videoFeed.src = '';
                     }
+                    videoFeed.style.display = 'none';
                 }
             })
             .catch(error => console.error('Error updating stats:', error));
@@ -176,7 +178,8 @@
             .then(data => {
                 if (data.status === 'success') {
                     const videoFeed = document.getElementById('video-feed');
-                    videoFeed.src = '{{ url_for("static", filename="images/placeholder.png") }}';
+                    videoFeed.src = '';
+                    videoFeed.style.display = 'none';
 
                     document.getElementById('processing-status').innerHTML =
                         '<span class="badge bg-secondary">Video Stopped</span>';
