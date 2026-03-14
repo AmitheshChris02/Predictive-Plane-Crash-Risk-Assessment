@@ -1,6 +1,6 @@
 
 ```markdown
-# Aircraft Monitoring System (GravityPakka)
+# Aircraft Monitoring System
 
 A comprehensive web-based aircraft monitoring and safety assessment system that integrates computer vision, machine learning, and real-time data analysis to provide comprehensive aircraft safety monitoring solutions.
 
@@ -8,7 +8,6 @@ A comprehensive web-based aircraft monitoring and safety assessment system that 
 
 - [Overview](#overview)
 - [Features](#features)
-- [System Architecture](#system-architecture)
 - [Modules](#modules)
 - [Models Used](#models-used)
 - [Technology Stack](#technology-stack)
@@ -67,32 +66,6 @@ The system provides a centralized dashboard for aviation companies to monitor th
 - What-if scenario analysis
 - Actionable recommendations
 
-## 🏗️ System Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Flask Web Application                │
-├─────────────────────────────────────────────────────────┤
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
-│  │   Module 1  │  │   Module 2   │  │   Module 3   │   │
-│  │  Runway     │  │  Black Box   │  │  Takeoff     │   │
-│  │  Monitoring │  │  Analysis    │  │  Risk        │   │
-│  └──────────────┘  └──────────────┘  └──────────────┘   │
-│         │                  │                  │           │
-│         ▼                  ▼                  ▼           │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │         SQLite Database (SQLAlchemy)             │   │
-│  │  - Users, RunwayAlerts, RiskAlerts               │   │
-│  └──────────────────────────────────────────────────┘   │
-│                                                           │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │              ML Models & Processing              │   │
-│  │  - YOLO Models (best.pt, best1.pt)               │   │
-│  │  - Gradient Boosting Classifier                  │   │
-│  │  - Autoencoder (Anomaly Detection)               │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
-```
 
 ## 📦 Modules
 
@@ -287,7 +260,7 @@ The system provides a centralized dashboard for aviation companies to monitor th
 ### Step 1: Clone the Repository
 ```bash
 git clone <repository-url>
-cd gravitypakka
+cd Predictive Plane Crash Risk Assessment
 ```
 
 ### Step 2: Create Virtual Environment
@@ -305,11 +278,7 @@ source venv/bin/activate
 ```bash
 pip install flask flask-sqlalchemy werkzeug ultralytics opencv-python numpy pandas scikit-learn matplotlib shap
 ```
-py -3.11 -m venv plane_env
-plane_env\Scripts\activate
-streamlit run Sanomaly_app.py
-plane_env\Scripts\activate
-streamlit run SRisk.py
+
 **Note**: Create a `requirements.txt` with:
 ```
 Flask==2.3.0
@@ -336,6 +305,13 @@ Ensure the following model files exist:
 
 ### Step 6: Run the Application
 ```bash
+on terminal 1
+streamlit run Sanomaly_app.py --server.port 8501
+
+on terminal 2 
+streamlit run SRisk.py --server.port 8502
+
+on terminal 3
 python app.py
 ```
 
@@ -456,7 +432,7 @@ The application will be available at `http://localhost:5000`
 ## 📁 Project Structure
 
 ```
-gravitypakka/
+Predictive Plane Crash Risk Assessment/
 ├── app.py                      # Main Flask application
 ├── models.py                   # Database models
 ├── config.py                    # Configuration
@@ -535,13 +511,12 @@ This is a project repository. Contributions are welcome! Please follow standard 
 3. Make your changes
 4. Submit a pull request
 
-## 📄 License
 
-[Specify your license here]
 
 ## 👥 Authors
-
-[Your name/team name]
+Amithesh Christus A,
+Aditya S M,
+Hari Prasanth B
 
 ## 🙏 Acknowledgments
 
@@ -550,16 +525,9 @@ This is a project repository. Contributions are welcome! Please follow standard 
 - Flask development team
 - Open-Meteo for weather data API
 
----
-
-**Version**: 1.0.0  
-**Last Updated**: 2024  
-**Status**: Active Development
-```
 
 This README includes:
 - Project overview and features
-- System architecture diagram
 - Module descriptions
 - Models used (YOLO, Gradient Boosting, Autoencoder)
 - Installation steps

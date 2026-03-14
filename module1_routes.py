@@ -63,7 +63,7 @@ def draw_boxes(frame, boxes, confs, classes, names, color=(0, 255, 0)):
     return frame
 
 
-def process_video(video_path, user_id, app):
+def process_video(video_path, user_id):
     """
     Background thread:
     - reads video
@@ -124,7 +124,7 @@ def process_video(video_path, user_id, app):
 
     # Save to DB ONLY if user did NOT press Stop (normal completion)
     if not local_stop and filename is not None:
-        with app.app_context():
+        with current_app.app_context():
             video_filename = filename
             runway_alert = RunwayAlert(
                 user_id=user_id,
@@ -199,11 +199,10 @@ def upload_video():
             detection_results["processing"] = True
 
         # Start processing in a separate background thread
-        app_obj = current_app._get_current_object()
         user_id = session['user_id']
         processing_thread = threading.Thread(
             target=process_video,
-            args=(video_path, user_id, app_obj),
+            args=(video_path, user_id),
             daemon=True
         )
         processing_thread.start()
