@@ -6,7 +6,3 @@ __pycache__/
 .cache.sqlite
 instance/
 logs/
-models/
-uploads/
-*.pkl
-*.csv
